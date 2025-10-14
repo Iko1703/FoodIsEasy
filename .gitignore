@@ -1,0 +1,37 @@
+# Visual Studio user-specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Tt]emp/
+[Tt]empPE/
+TestResults/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]ppPackages/
+[Bb]uild[Ll]og.*
+
+# NuGet
+*.nupkg
+packages/
+
+# Publish folders
+publish/
+out/
+
+# Backup & Autosave
+*.bak
+*.swp
+*.tmp
+
+# IDE cache
+_ReSharper*/
+*.DotSettings.user

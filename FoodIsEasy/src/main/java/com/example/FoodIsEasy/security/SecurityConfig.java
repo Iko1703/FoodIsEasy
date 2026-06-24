@@ -1,7 +1,9 @@
 package com.example.FoodIsEasy.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -38,9 +40,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtService jwtService() {
-        String secret = "ReplaceWithASecureSecretKeyOfAtLeast32BytesLength!!!!";
-        long expirationMs = 1000L * 60 * 60 * 24;
+    public JwtService jwtService(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration-ms}") long expirationMs) {
         return new JwtService(secret, expirationMs);
     }
 
@@ -50,7 +52,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            AuthenticationProvider authenticationProvider) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> {})
@@ -60,14 +65,28 @@ public class SecurityConfig {
                                 "/",
                                 "/index.html",
                                 "/*.jpg",
+                                "/images/**",
                                 "/assets/**",
                                 "/favicon.ico",
                                 "/auth/**",
                                 "/products/**",
-                                "/delishies/**"
+                                "/delishies/**",
+                                "/cuisines/**",
+                                "/dish-categories/**"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/login",
+                                "/register",
+                                "/recommendations",
+                                "/planner",
+                                "/analytics",
+                                "/groups",
+                                "/profile",
+                                "/api"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -80,8 +99,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

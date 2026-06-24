@@ -3,6 +3,8 @@ package com.example.FoodIsEasy.model.entity;
 import com.example.FoodIsEasy.model.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -16,6 +18,8 @@ public class User {
     private Long id;
 
     private String email;
+
+    @JsonIgnore
     private String password;
 
     @Column(name = "first_name")
@@ -28,6 +32,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -90,6 +97,14 @@ public class User {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public java.util.List<Feedback> getFeedbacks() {

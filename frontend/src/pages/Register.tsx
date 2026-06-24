@@ -18,8 +18,13 @@ export default function Register() {
       const res = await api.post('/auth/register', { email, password, firstName, lastName })
       setToken(res.data.token)
       navigate('/')
-    } catch (e: any) {
-      setError('Ошибка регистрации')
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { error?: string } }; message?: string }
+      if (!err.response) {
+        setError('Сервер недоступен. Запустите: docker compose up --build')
+      } else {
+        setError(err.response?.data?.error ?? 'Ошибка регистрации (пароль от 6 символов, корректный email)')
+      }
     }
   }
 

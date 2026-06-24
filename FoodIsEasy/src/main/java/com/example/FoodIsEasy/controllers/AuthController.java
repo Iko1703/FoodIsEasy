@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -49,6 +50,7 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(req.password()));
         user.setFirstName(req.firstName());
         user.setLastName(req.lastName());
+        user.setCreatedAt(LocalDateTime.now());
         userRepo.save(user);
         String token = jwtService.generateToken(user.getEmail());
         return ResponseEntity.ok(Map.of("token", token));

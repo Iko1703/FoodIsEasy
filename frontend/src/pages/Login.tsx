@@ -16,14 +16,20 @@ export default function Login() {
       const res = await api.post('/auth/login', { email, password })
       setToken(res.data.token)
       navigate('/')
-    } catch (e: any) {
-      setError('Неверный email или пароль')
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { error?: string } }; message?: string }
+      if (!err.response) {
+        setError('Сервер недоступен. Запустите: docker compose up --build')
+      } else {
+        setError(err.response?.data?.error ?? 'Неверный email или пароль')
+      }
     }
   }
 
   return (
     <div className="auth">
       <h2>Вход</h2>
+      <p className="hint">Демо: alice@foodiseasy.ru / password</p>
       <form onSubmit={onSubmit}>
         <input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input placeholder="Пароль" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />

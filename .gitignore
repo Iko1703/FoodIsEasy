@@ -35,3 +35,13 @@ out/
 # IDE cache
 _ReSharper*/
 *.DotSettings.user
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+
+# Java build
+FoodIsEasy/target/
+
+# Env
+.env

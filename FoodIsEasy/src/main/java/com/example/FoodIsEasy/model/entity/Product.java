@@ -27,7 +27,10 @@ public class Product {
     @Column(name = "kcal_per_100g")
     Integer kcalPer100g;
 
-    
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    ProductCategory category;
+
 
     public Product() {
     }
@@ -78,6 +81,14 @@ public class Product {
 
     public void setKcalPer100g(Integer kcalPer100g) {
         this.kcalPer100g = kcalPer100g;
+    }
+
+    public ProductCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ProductCategory category) {
+        this.category = category;
     }
 }
 

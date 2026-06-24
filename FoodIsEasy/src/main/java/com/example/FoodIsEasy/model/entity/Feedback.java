@@ -27,6 +27,8 @@ public class Feedback {
     @Column(nullable = false, length = 2000)
     String message;
 
+    Short rating;
+
     @Column(name = "created_at", nullable = false)
     LocalDateTime createdAt;
 
@@ -63,6 +65,14 @@ public class Feedback {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Short getRating() {
+        return rating;
+    }
+
+    public void setRating(Short rating) {
+        this.rating = rating;
     }
 
     public LocalDateTime getCreatedAt() {
